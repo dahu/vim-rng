@@ -1,0 +1,5 @@
+Vim RNG
+
+Beginnings of a Random Number Generator in Vim
+
+Also provides a very rudimentary RandomString(prefix, length, suffix).
