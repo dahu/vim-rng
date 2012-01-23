@@ -6,16 +6,17 @@ let s:m_z = localtime()
 " not sure of the wisdom of generating a full 32-bit RN here
 " and then using abs() on the sucker. Feedback welcome.
 function! RandomNumber()
-  let s:m_z = s:m_z + (s:m_z / 4)
-  let s:m_w = s:m_w + (s:m_w / 4)
-  return abs((s:m_z) + s:m_w)      " 32-bit result?
+  let s:m_z = (36969 * and(s:m_z, 0xffff)) + (s:m_z / 65536)
+  let s:m_w = (18000 * and(s:m_w, 0xffff)) + (s:m_w / 65536)
+  return (s:m_z * 65536) + s:m_w      " 32-bit result
 endfunction
 " end RNG }}}
 
 " RandomChar(base, cap)
 "   base : the lowest char number desired
 "   cap  : the highest char number desired
-" Defaults to ASCII characters in the range 33-126 (!-~)
+" Defaults to ASCII characters in the range
+" 33-126 (!-~)
 " But it's capable of much wider character tables
 function! RandomChar(...)
   let base = 33
