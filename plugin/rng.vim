@@ -18,3 +18,14 @@ function! RandomString(prefix, length, suffix)
   return result . randnum . a:suffix
 endfunction
 
+function! RandomChars(randstring, charmap)
+  let result = ''
+  for c in split(a:randstring, '\zs')
+    if c % 2 == 0
+      let result .= '#'
+    else
+      let result .= '*'
+    endif
+  endfor
+  return result
+endfunction
