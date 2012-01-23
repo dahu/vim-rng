@@ -1,31 +1,62 @@
-" George Marsaglia's Multiply-with-carry Random Number Generator {{{2
+" George Marsaglia's Multiply-with-carry Random Number Generator {{{
+" Modified to work within Vim's semantics
 let s:m_w = matchstr(tempname(), '\d\+') * getpid()
 let s:m_z = localtime()
 
-" sledge hammer to crack a nut?
-" also... not sure of the wisdom of generating a full 32-bit RN here
-" and then using abs() on the sucker. But it'll do for now...
+" not sure of the wisdom of generating a full 32-bit RN here
+" and then using abs() on the sucker. Feedback welcome.
 function! RandomNumber()
   let s:m_z = s:m_z + (s:m_z / 4)
   let s:m_w = s:m_w + (s:m_w / 4)
-  return abs((s:m_z) + s:m_w)      " 32-bit result
+  return abs((s:m_z) + s:m_w)      " 32-bit result?
 endfunction
-" end RNG }}}2
+" end RNG }}}
 
-function! RandomString(prefix, length, suffix)
-  let result = a:prefix
-  let randnum = strpart(RandomNumber(), 1, a:length)
-  return result . randnum . a:suffix
+" RandomChar(base, cap)
+"   base : the lowest char number desired
+"   cap  : the highest char number desired
+" Defaults to ASCII characters in the range 33-126 (!-~)
+" But it's capable of much wider character tables
+function! RandomChar(...)
+  let base = 33
+  let cap = 126
+  if a:0 > 0
+    let base = a:1
+  endif
+  if a:0 > 1
+    let cap = a:2
+  endif
+  let adj = abs(cap - base) + 1
+  return nr2char(RandomNumber() % adj + base)
 endfunction
 
-function! RandomChars(randstring, charmap)
-  let result = ''
-  for c in split(a:randstring, '\zs')
-    if c % 2 == 0
-      let result .= '#'
+function! RandomCharsInSet(length, set)
+  let from = join(map(range(len(a:set)), 'nr2char(char2nr("a")+v:val)'), '')
+  let to = join(a:set, '')
+  return map(RandomChars(a:length, 97, 96+len(a:set)), 'tr(v:val, from, to)')
+endfunction
+
+function! RandomChars(length, ...)
+  let args = []
+  if a:0 > 0
+    if type(a:1) == type([])
+      let args = a:1
     else
-      let result .= '*'
+      let args = a:000
     endif
-  endfor
-  return result
+  endif
+  return map(repeat([0], a:length), 'call("RandomChar", args)')
 endfunction
+
+function! RandomString(length, ...)
+  let args = []
+  if a:0 > 0
+    if type(a:1) == type([])
+      let args = a:1
+    else
+      let args = a:000
+    endif
+  endif
+  return join(call('RandomChars', [a:length, args]), '')
+endfunction
+
