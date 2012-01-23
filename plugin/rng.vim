@@ -1,6 +1,6 @@
 " George Marsaglia's Multiply-with-carry Random Number Generator {{{
 " Modified to work within Vim's semantics
-let s:m_w = matchstr(tempname(), '\d\+') * getpid()
+let s:m_w = 1 + getpid()
 let s:m_z = localtime()
 
 " not sure of the wisdom of generating a full 32-bit RN here
@@ -28,7 +28,7 @@ function! RandomChar(...)
     let cap = a:2
   endif
   let adj = abs(cap - base) + 1
-  return nr2char(RandomNumber() % adj + base)
+  return nr2char(abs(RandomNumber()) % adj + base)
 endfunction
 
 function! RandomCharsInSet(length, set)
