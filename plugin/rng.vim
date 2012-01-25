@@ -5,10 +5,15 @@ let s:m_z = localtime()
 
 " not sure of the wisdom of generating a full 32-bit RN here
 " and then using abs() on the sucker. Feedback welcome.
-function! RandomNumber()
-  let s:m_z = (36969 * and(s:m_z, 0xffff)) + (s:m_z / 65536)
-  let s:m_w = (18000 * and(s:m_w, 0xffff)) + (s:m_w / 65536)
-  return (s:m_z * 65536) + s:m_w      " 32-bit result
+function! RandomNumber(...)
+  if a:0 == 0
+    let s:m_z = (36969 * and(s:m_z, 0xffff)) + (s:m_z / 65536)
+    let s:m_w = (18000 * and(s:m_w, 0xffff)) + (s:m_w / 65536)
+    return (s:m_z * 65536) + s:m_w      " 32-bit result
+  elseif a:0 == 1 " We return a number in [0, a:1] or [a:1, 0]
+    return a:1 < 0 ? RandomNumber(a:1,0) : RandomNumber(0,a:1)
+  else " if a:2 >= 2
+    return abs(RandomNumber()) % (abs(a:2 - a:1) + 1) + a:1
 endfunction
 " end RNG }}}
 
@@ -27,8 +32,7 @@ function! RandomChar(...)
   if a:0 > 1
     let cap = a:2
   endif
-  let adj = abs(cap - base) + 1
-  return nr2char(abs(RandomNumber()) % adj + base)
+  return nr2char(RandomNumber(base, cap))
 endfunction
 
 function! RandomCharsInSet(length, set)
