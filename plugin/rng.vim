@@ -14,6 +14,7 @@ function! RandomNumber(...)
     return a:1 < 0 ? RandomNumber(a:1,0) : RandomNumber(0,a:1)
   else " if a:2 >= 2
     return abs(RandomNumber()) % (abs(a:2 - a:1) + 1) + a:1
+  endif
 endfunction
 " end RNG }}}
 

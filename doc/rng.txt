@@ -1,0 +1,73 @@
+*rng.txt*  -  Random Numbers, Chars and Strings
+
+Author:   Barry Arthur <barry dot arthur at gmail dot com>
+
+License: Same terms as Vim itself (see |license|)
+
+                                                *rng*
+INTRODUCTION ~
+
+rng provides random numbers, characters and Strings at a specifiable
+length. Random characters can be within a range or constrained to a
+set of characters.
+
+                                      *rng-functions*
+FUNCTIONS ~
+
+RandomNumber()
+This returns a random 32 bit number between.
+>
+  e.g.
+  :echo RandomNumber()
+  2073985768
+<
+
+Additionally, the following functions are available to control rng
+through Vimscript:
+
+* rngOn()
+* rngOff()
+* rngToggle(boolean)
+
+                                  *rng-configuration*
+CONFIGURATION ~
+
+Several aspects of rng can be configured from your $HOME/.vimrc
+file. Control whether rng is on automatically when Vim starts, the
+colour of the highlighting and the keys used to turn rng on and off.
+
+                                  *rng-activation*
+Automatic Activation ~
+
+rng is disabled by default. To enable it automatically, add the
+following line to your $HOME/.vimrc:
+>
+  let g:rng = 1
+<
+
+                                  *rng-highlighting*
+Highlighting ~
+
+The rng highlight group defines the colours and attributes of the
+striped lines (green background by default). This can be changed by
+adding a line like the following to your $HOME/.vimrc:
+>
+  hi rng ctermbg=grey guibg=grey
+<
+
+                                  *rng-keymaps*
+Key Maps ~
+
+By default, rng is turned on with the key map <leader>z and off with
+<leader>Z.
+
+rng uses <plug> maps so you can override the defaults. Here is an
+example you could put in your $HOME/.vimrc:
+
+>
+  nmap <leader>x <plug>rngOn
+  nmap <leader>X <plug>rngOff
+<
+
+
+ vim:tw=78:ts=8:ft=help:norl:
